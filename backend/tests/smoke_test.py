@@ -1,7 +1,7 @@
 import requests
 import time
 
-BACKEND_URL = "http://localhost:8000"
+BACKEND_URL = "http://backend:80"
 
 def smoke_test():
     print(f"Attempting to connect to backend at {BACKEND_URL}...")
