@@ -1,13 +1,19 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import PatientListPage from './pages/patients/PatientListPage';
+import HomePage from './pages/HomePage';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello from React Frontend!</p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/patients" element={<PatientListPage />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default App; 
+export default App;
