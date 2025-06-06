@@ -1,20 +1,19 @@
-# User CRUD operations 
+# User CRUD operations
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
+# Remove this import: from passlib.context import CryptContext
 from app.db.models import User
+from app.core.security import get_password_hash # Import get_password_hash
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-def get_password_hash(password: str) -> str:
-    """Hash a password."""
-    return pwd_context.hash(password)
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+# Remove this entire block (including the pwd_context definition and the two functions):
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+#
+# def get_password_hash(password: str) -> str:
+#     """Hash a password."""
+#     return pwd_context.hash(password)
+#
+# def verify_password(plain_password: str, hashed_password: str) -> bool:
+#     """Verify a password against its hash."""
+#     return pwd_context.verify(plain_password, hashed_password)
 
 
 def get_user_by_email(db: Session, email: str):
@@ -33,4 +32,4 @@ def create_user(db: Session, email: str, name: str, password: str):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return db_user 
+    return db_user
