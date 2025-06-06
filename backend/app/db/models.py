@@ -26,6 +26,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    roles = Column(String, default=list)
 
     def check_password(self, password: str) -> bool:
         """Check if the provided password matches the hashed password using the application's password context."""
