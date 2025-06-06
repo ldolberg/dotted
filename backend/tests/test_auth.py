@@ -67,4 +67,31 @@ class TestUserRegistration:
         
         assert response.status_code == 400
         response_data = json.loads(response.data)
-        assert 'error' in response_data 
+        assert 'error' in response_data
+
+    def test_user_registration_duplicate_email(self, client):
+        """Test user registration with duplicate email."""
+        user_data = {
+            "email": "duplicate@example.com",
+            "password": "securepassword123",
+            "name": "Test User"
+        }
+        
+        # First registration should succeed
+        response1 = client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(user_data),
+            content_type='application/json'
+        )
+        assert response1.status_code == 201
+        
+        # Second registration with same email should fail
+        response2 = client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(user_data),
+            content_type='application/json'
+        )
+        assert response2.status_code == 400
+        response_data = json.loads(response2.data)
+        assert 'error' in response_data
+        assert 'email' in response_data['error'].lower() or 'exists' in response_data['error'].lower() 

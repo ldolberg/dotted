@@ -1,7 +1,17 @@
 import re
 from flask import Blueprint, request, jsonify
+from app.db.session import SessionLocal
+from app.crud.user import get_user_by_email, create_user
+from app.db import create_tables
 
 auth_bp = Blueprint('auth', __name__)
+
+# Initialize tables on first import
+try:
+    create_tables()
+except Exception as e:
+    # Log the error but don't fail the import
+    print(f"Warning: Could not create tables: {e}")
 
 
 def is_valid_email(email):
@@ -25,12 +35,29 @@ def register():
     if not is_valid_email(data['email']):
         return jsonify({'error': 'Invalid email format'}), 400
     
-    # For now, just return the data with a fake ID to make the test pass
-    # We'll improve this in the next iteration
-    response_data = {
-        'id': 1,
-        'email': data['email'],
-        'name': data['name']
-    }
-    
-    return jsonify(response_data), 201 
+    # Create database session
+    db = SessionLocal()
+    try:
+        # Check if user already exists
+        existing_user = get_user_by_email(db, data['email'])
+        if existing_user:
+            return jsonify({'error': 'Email already registered'}), 400
+        
+        # Create new user
+        user = create_user(
+            db=db,
+            email=data['email'],
+            name=data['name'],
+            password=data['password']
+        )
+        
+        response_data = {
+            'id': user.id,
+            'email': user.email,
+            'name': user.name
+        }
+        
+        return jsonify(response_data), 201
+        
+    finally:
+        db.close() 
