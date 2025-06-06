@@ -11,3 +11,4 @@ uvicorn
 gunicorn
 Flask
 Flask-SQLAlchemy
+pytest
