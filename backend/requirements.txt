@@ -6,4 +6,6 @@ redis
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
-requests 
+requests
+pytest
+httpx 
