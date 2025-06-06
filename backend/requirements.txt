@@ -1,4 +1,4 @@
-fastapi
+Flask
 uvicorn[standard]
 sqlalchemy
 psycopg2-binary
@@ -7,3 +7,7 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 requests 
+uvicorn
+gunicorn
+Flask
+Flask-SQLAlchemy
