@@ -27,7 +27,7 @@ jobs:
       run: sleep 10 # Simple wait, replace with proper healthcheck wait in the future
 
     - name: Run smoke test
-      run: docker-compose run --rm backend python /app/tests/smoke_test.py
+      run: docker compose run --rm backend python /app/tests/smoke_test.py
 
     - name: Stop services
-      run: docker-compose down 
+      run: docker compose down 
