@@ -76,6 +76,18 @@ The tests are configured to:
 - Record videos on failure
 - Generate HTML reports
 - Retry failed tests in CI environment
+- Automatically handle authentication using demo credentials
+- Persist authentication state across tests for better performance
+
+## Authentication
+
+The tests automatically handle authentication using the demo credentials:
+- **Email**: `admin@test.com`
+- **Password**: `admin123`
+
+Authentication is set up in the global setup phase and the session state is saved to `auth-state.json` for reuse across all tests. This improves test performance by avoiding repeated logins.
+
+If authentication fails or the session expires, individual tests will fall back to performing login manually.
 
 ## Environment Variables
 

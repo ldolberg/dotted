@@ -1,8 +1,14 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 
 const baseURL = process.env.BASE_URL || 'http://frontend:3000';
 const apiURL = process.env.API_URL || 'http://backend:80';
+
+// Check if auth state file exists
+const authStatePath = path.join(__dirname, 'auth-state.json');
+const storageState = fs.existsSync(authStatePath) ? authStatePath : undefined;
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -33,6 +39,8 @@ module.exports = defineConfig({
     screenshot: 'only-on-failure',
     /* Record video on failure */
     video: 'retain-on-failure',
+    /* Use authentication state if available */
+    storageState: storageState,
   },
 
   /* Configure projects for major browsers */

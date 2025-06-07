@@ -11,6 +11,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - type: bind
+        source: ./db/pg_hba.conf
+        target: /docker-entrypoint-initdb.d/pg_hba.conf
+    # Add a command to ensure the server uses the new config if needed, though mounting should suffice
+    # command: postgres -c 'hba_file=/var/lib/postgresql/data/pg_hba.conf'
 
   redis:
     image: redis:alpine
@@ -41,7 +46,7 @@ services:
     depends_on:
       - backend
     environment:
-      REACT_APP_BACKEND_URL: http://192.168.4.62:8000 # Use host IP for browser access
+      REACT_APP_BACKEND_URL: http://localhost:8000 # Use localhost for browser access
 
   playwright:
     build:

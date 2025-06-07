@@ -1,5 +1,6 @@
+import flask # Added to access request object
 from functools import wraps
-from flask import jsonify
+from flask import jsonify, request # Import request object
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, get_jwt # Import necessary functions
 from werkzeug.exceptions import NotFound # Import NotFound
 
@@ -7,6 +8,7 @@ def token_required(allowed_roles=None):
     """
     Decorator to protect endpoints. Requires a valid JWT token.
     Optionally checks if the user has one of the allowed roles.
+    Allows OPTIONS requests to bypass token verification for CORS preflight.
     """
     if allowed_roles is None:
         allowed_roles = []
@@ -14,6 +16,13 @@ def token_required(allowed_roles=None):
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
+            # Allow OPTIONS requests to pass through for CORS preflight
+            if request.method == 'OPTIONS':
+                print("DEBUG: OPTIONS request, bypassing token verification.")
+                # Flask-CORS should handle the appropriate headers for 200 OK
+                # Return an empty response with 200 OK
+                return jsonify({}), 200
+
             try:
                 print("DEBUG: Entering token_required decorator")
                 verify_jwt_in_request()

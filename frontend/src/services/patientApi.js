@@ -17,18 +17,13 @@ export const patientApi = {
       });
 
       if (response.ok) {
-        const patients = await response.json();
-        console.log('Successfully fetched patients from backend:', patients);
+        const result = await response.json();
+        console.log('Successfully fetched patients from backend:', result);
         
         // Transform backend patient data to match our frontend format
-        return patients.map(patient => ({
-          id: patient.id,
-          name: `${patient.first_name} ${patient.last_name}`,
-          age: patient.date_of_birth ? 
-            new Date().getFullYear() - new Date(patient.date_of_birth).getFullYear() : 
-            'Unknown',
-          diagnosis: patient.email // Using email as placeholder since diagnosis is not in backend model
-        }));
+        // Backend returns {data: [...]} format
+        const patients = result.data || [];
+        return patients
       } else if (response.status === 401) {
         console.warn('Authentication failed - redirecting to login');
         authService.logout();

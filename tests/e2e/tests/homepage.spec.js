@@ -1,8 +1,10 @@
 const { test, expect } = require('@playwright/test');
+const { setupAuthenticatedPage } = require('./auth.helper');
 
 test.describe('Homepage', () => {
   test('should load homepage successfully', async ({ page }) => {
-    await page.goto('/');
+    // Login first
+    await setupAuthenticatedPage(page);
     
     // Check page title
     await expect(page).toHaveTitle('React App');
@@ -13,12 +15,14 @@ test.describe('Homepage', () => {
     // Check main content
     await expect(page.getByText('This is the main dashboard area.')).toBeVisible();
     
-    // Check sidebar navigation
-    await expect(page.getByRole('menuitem', { name: /Users/ })).toBeVisible();
+    // Check sidebar navigation - verify both menu items exist
+    await expect(page.getByRole('menuitem', { name: 'Dashboard' }).first()).toBeVisible();
+    await expect(page.getByRole('menuitem', { name: 'Patients' }).first()).toBeVisible();
   });
 
   test('should have proper layout structure', async ({ page }) => {
-    await page.goto('/');
+    // Login first
+    await setupAuthenticatedPage(page);
     
     // Check that the layout has sidebar and main content
     // Use class selectors since Ant Design may not set ARIA roles consistently
@@ -36,7 +40,9 @@ test.describe('Homepage', () => {
   test('should be responsive', async ({ page }) => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto('/');
+    
+    // Login first
+    await setupAuthenticatedPage(page);
     
     // Page should still be accessible on mobile
     await expect(page.getByRole('heading', { name: 'Welcome to the Homepage' })).toBeVisible();

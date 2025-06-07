@@ -1,7 +1,10 @@
 const { test, expect } = require('@playwright/test');
+const { setupAuthenticatedPage } = require('./auth.helper');
 
 test.describe('Patients Page', () => {
   test('should load patients page successfully', async ({ page }) => {
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     
     // Check page title
@@ -21,6 +24,8 @@ test.describe('Patients Page', () => {
   });
 
   test('should display patient data', async ({ page }) => {
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     
     // Wait for data to load
@@ -47,6 +52,8 @@ test.describe('Patients Page', () => {
   });
 
   test('should have functional action buttons', async ({ page }) => {
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     
     // Wait for table to load
@@ -72,11 +79,15 @@ test.describe('Patients Page', () => {
       }
     });
 
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     await page.waitForSelector('table tbody tr');
     
-    // Click first Edit button
-    await page.getByRole('button', { name: 'Edit' }).first().click();
+    // Click first Edit button (with better mobile handling)
+    const editButton = page.getByRole('button', { name: 'Edit' }).first();
+    await editButton.scrollIntoViewIfNeeded();
+    await editButton.click({ force: true });
     
     // Wait a bit for console log
     await page.waitForTimeout(100);
@@ -84,8 +95,10 @@ test.describe('Patients Page', () => {
     // Verify console log was generated
     expect(consoleLogs.some(log => log.includes('Edit patient: 1'))).toBeTruthy();
     
-    // Click first Delete button
-    await page.getByRole('button', { name: 'Delete' }).first().click();
+    // Click first Delete button (with better mobile handling)
+    const deleteButton = page.getByRole('button', { name: 'Delete' }).first();
+    await deleteButton.scrollIntoViewIfNeeded();
+    await deleteButton.click({ force: true });
     
     // Wait a bit for console log
     await page.waitForTimeout(100);
@@ -95,6 +108,8 @@ test.describe('Patients Page', () => {
   });
 
   test('should have pagination', async ({ page }) => {
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     
     // Check pagination is present
@@ -107,6 +122,9 @@ test.describe('Patients Page', () => {
   test('should be responsive on mobile', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
+    
+    // Login first
+    await setupAuthenticatedPage(page);
     await page.goto('/patients');
     
     // Page should still be accessible

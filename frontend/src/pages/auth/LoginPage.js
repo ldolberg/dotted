@@ -188,7 +188,7 @@ const LoginPage = () => {
             {!isRegistering && (
               <div style={{ textAlign: 'center', marginTop: 12 }}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
-                  Demo credentials: admin@example.com / password123
+                  Demo credentials: admin@test.com / admin123
                 </Text>
               </div>
             )}

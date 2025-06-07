@@ -1,9 +1,10 @@
 const { test, expect } = require('@playwright/test');
+const { setupAuthenticatedPage } = require('./auth.helper');
 
 test.describe('Navigation', () => {
   test('should navigate from homepage to patients page via URL', async ({ page }) => {
-    // Start at homepage
-    await page.goto('/');
+    // Login and start at homepage
+    await setupAuthenticatedPage(page);
     await expect(page.getByRole('heading', { name: 'Welcome to the Homepage' })).toBeVisible();
     
     // Navigate to patients page
@@ -12,7 +13,10 @@ test.describe('Navigation', () => {
   });
 
   test('should handle direct navigation to patients page', async ({ page }) => {
-    // Go directly to patients page
+    // Login first
+    await setupAuthenticatedPage(page);
+    
+    // Navigate to patients page
     await page.goto('/patients');
     
     // Should load successfully
@@ -21,8 +25,8 @@ test.describe('Navigation', () => {
   });
 
   test('should handle direct navigation to homepage', async ({ page }) => {
-    // Go directly to homepage
-    await page.goto('/');
+    // Login and go to homepage
+    await setupAuthenticatedPage(page);
     
     // Should load successfully
     await expect(page.getByRole('heading', { name: 'Welcome to the Homepage' })).toBeVisible();
@@ -30,8 +34,8 @@ test.describe('Navigation', () => {
   });
 
   test('should maintain proper URLs during navigation', async ({ page }) => {
-    // Go to homepage
-    await page.goto('/');
+    // Login and go to homepage
+    await setupAuthenticatedPage(page);
     expect(page.url()).toMatch(/\/$|\/$/);
     
     // Go to patients
@@ -40,8 +44,8 @@ test.describe('Navigation', () => {
   });
 
   test('should handle browser back/forward navigation', async ({ page }) => {
-    // Start at homepage
-    await page.goto('/');
+    // Login and start at homepage
+    await setupAuthenticatedPage(page);
     await expect(page.getByRole('heading', { name: 'Welcome to the Homepage' })).toBeVisible();
     
     // Navigate to patients
@@ -58,6 +62,9 @@ test.describe('Navigation', () => {
   });
 
   test('should handle invalid routes gracefully', async ({ page }) => {
+    // Login first
+    await setupAuthenticatedPage(page);
+    
     // Try to navigate to non-existent route
     await page.goto('/nonexistent');
     
@@ -70,8 +77,8 @@ test.describe('Navigation', () => {
   });
 
   test('should navigate via sidebar menu links', async ({ page }) => {
-    // Start at homepage
-    await page.goto('/');
+    // Login and start at homepage
+    await setupAuthenticatedPage(page);
     
     // Verify homepage sidebar is present
     await expect(page.locator('.ant-layout-sider')).toBeVisible();
@@ -99,8 +106,8 @@ test.describe('Navigation', () => {
   });
 
   test('should highlight active menu item correctly', async ({ page }) => {
-    // Go to homepage
-    await page.goto('/');
+    // Login and go to homepage
+    await setupAuthenticatedPage(page);
     
     // Dashboard should be selected (highlighted)
     const dashboardMenuItem = page.locator('.ant-menu-item').filter({ hasText: 'Dashboard' });
