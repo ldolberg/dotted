@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button } from 'antd';
 import { patientApi } from '../../services/patientApi';
+import AppLayout from '../../components/AppLayout';
 
 const PatientListPage = () => {
   const [patients, setPatients] = useState([]);
@@ -62,7 +63,7 @@ const PatientListPage = () => {
   ];
 
   return (
-    <div>
+    <AppLayout>
       <h1>Patient List</h1>
       <Table
         dataSource={patients}
@@ -71,7 +72,7 @@ const PatientListPage = () => {
         loading={loading}
         pagination={{ pageSize: 10 }}
       />
-    </div>
+    </AppLayout>
   );
 };
 
