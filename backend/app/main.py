@@ -1,11 +1,15 @@
 import flask
 # from flask import Flask
+from flask_cors import CORS  # Add CORS import
 from app.routes import api_bp
 from app.api.v1 import api_v1
 from flask_jwt_extended import JWTManager # Import JWTManager
 from app.extensions import db, migrate # Import db and migrate from extensions
 
 app = flask.Flask(__name__)
+
+# Configure CORS to allow requests from frontend
+CORS(app, origins=["http://192.168.4.62:3000", "http://localhost:3000"])
 
 # Configure JWTManager
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this in production!

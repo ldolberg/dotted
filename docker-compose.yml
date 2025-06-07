@@ -41,7 +41,7 @@ services:
     depends_on:
       - backend
     environment:
-      REACT_APP_BACKEND_URL: http://localhost:8000 # Adjust if running directly, or use service name in docker
+      REACT_APP_BACKEND_URL: http://192.168.4.62:8000 # Use host IP for browser access
 
   playwright:
     build:

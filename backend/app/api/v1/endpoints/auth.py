@@ -1,4 +1,5 @@
 import re
+import json
 from flask import Blueprint, request, jsonify, redirect, url_for, session
 from app.db.session import get_db
 from app.crud.user import get_user_by_email, create_user
@@ -6,7 +7,6 @@ from app.db import create_tables
 from flask_jwt_extended import create_access_token
 from requests_oauthlib.oauth2_session import OAuth2Session
 import os
-import json
 
 # TODO: Load environment variables for Google OAuth credentials and redirect URI
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
@@ -93,8 +93,13 @@ def login():
         # Check if user exists and password is correct
         user = get_user_by_email(db, data['email'])
         if user and user.check_password(data['password']):
-            # Create the access token for the user
-            access_token = create_access_token(identity=str(user.id))
+            # Create the access token for the user with roles
+            try:
+                user_roles = json.loads(user.roles) if user.roles else []
+            except (json.JSONDecodeError, TypeError):
+                user_roles = []
+            additional_claims = {"roles": user_roles}
+            access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
             return jsonify({'message': 'Login successful!', 'access_token': access_token}), 200
         else:
             return jsonify({'error': 'Invalid email or password'}), 401
@@ -167,15 +172,25 @@ def google_callback():
             user = get_user_by_email(db, user_email)
 
             if user:
-                # Existing user, generate JWT
-                access_token = create_access_token(identity=str(user.id))
+                # Existing user, generate JWT with roles
+                try:
+                    user_roles = json.loads(user.roles) if user.roles else []
+                except (json.JSONDecodeError, TypeError):
+                    user_roles = []
+                additional_claims = {"roles": user_roles}
+                access_token = create_access_token(identity=str(user.id), additional_claims=additional_claims)
                 return jsonify({'message': 'Login successful!', 'access_token': access_token}), 200
             else:
                 # New user, create in database and generate JWT
                 # For simplicity, generating a random password. In a real app, handle this securely or mark as OAuth user.
                 # You might also want to redirect the user to a profile completion page.
                 new_user = create_user(db=db, email=user_email, name=user_name or user_email, password=os.urandom(16).hex())
-                access_token = create_access_token(identity=str(new_user.id))
+                try:
+                    new_user_roles = json.loads(new_user.roles) if new_user.roles else []
+                except (json.JSONDecodeError, TypeError):
+                    new_user_roles = []
+                additional_claims = {"roles": new_user_roles}
+                access_token = create_access_token(identity=str(new_user.id), additional_claims=additional_claims)
                 return jsonify({'message': 'User created and logged in successfully!', 'access_token': access_token}), 201
 
         finally:

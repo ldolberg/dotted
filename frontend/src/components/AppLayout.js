@@ -1,12 +1,15 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
-import { UserOutlined, TeamOutlined } from '@ant-design/icons';
+import { Layout, Menu, Button, Space, Typography } from 'antd';
+import { UserOutlined, TeamOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-const { Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
+const { Text } = Typography;
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
+  const { user, logout } = useAuth();
   
   // Determine selected key based on current route
   const getSelectedKey = () => {
@@ -32,6 +35,19 @@ const AppLayout = ({ children }) => {
         </Menu>
       </Sider>
       <Layout>
+        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div />
+          <Space>
+            <Text>Welcome, {user?.name || user?.email || 'User'}</Text>
+            <Button 
+              type="text" 
+              icon={<LogoutOutlined />} 
+              onClick={logout}
+            >
+              Logout
+            </Button>
+          </Space>
+        </Header>
         <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280, background: '#fff' }}>
           {children}
         </Content>
