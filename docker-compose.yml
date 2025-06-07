@@ -11,6 +11,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - type: bind
+        source: ./db/pg_hba.conf
+        target: /docker-entrypoint-initdb.d/pg_hba.conf
+    # Add a command to ensure the server uses the new config if needed, though mounting should suffice
+    # command: postgres -c 'hba_file=/var/lib/postgresql/data/pg_hba.conf'
 
   redis:
     image: redis:alpine
@@ -29,6 +34,7 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/app_db
       REDIS_URL: redis://redis:6379
+      FLASK_APP: app.main
 
   frontend:
     build: ./frontend
@@ -40,7 +46,27 @@ services:
     depends_on:
       - backend
     environment:
-      REACT_APP_BACKEND_URL: http://localhost:8000 # Adjust if running directly, or use service name in docker
+      REACT_APP_BACKEND_URL: http://localhost:8000 # Use localhost for browser access
+
+  playwright:
+    build:
+      context: ./tests/e2e
+      dockerfile: Dockerfile
+    volumes:
+      - ./tests/e2e:/app
+      - ./tests/e2e/test-results:/app/test-results
+      - ./tests/e2e/playwright-report:/app/playwright-report
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      BASE_URL: http://frontend:3000
+      API_URL: http://backend:80
+    command: ["tail", "-f", "/dev/null"]  # Keep container running for manual test execution
+    ports:
+      - "9323:9323"  # For Playwright UI mode
+    profiles:
+      - testing
 
 volumes:
   postgres_data: 

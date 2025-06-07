@@ -1,0 +1,25 @@
+{
+  "name": "dotted-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Dotted SaaS Reminder Service",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui --ui-host=0.0.0.0 --ui-port=9323",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "show-report": "playwright show-report --host 0.0.0.0",
+    "codegen": "playwright codegen"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "testing",
+    "saas",
+    "reminder-service"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+} 
