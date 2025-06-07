@@ -34,11 +34,44 @@ export const patientApi = {
     } catch (error) {
       console.error('Error fetching patients:', error);
       console.log('Falling back to mock data...');
-      // Fall back to mock data if API call fails
+      // Fall back to mock data that matches the real backend data structure
       return [
-        { id: 1, name: 'John Doe (Offline)', age: 30, diagnosis: 'Flu' },
-        { id: 2, name: 'Jane Smith (Offline)', age: 25, diagnosis: 'Cold' },
-        { id: 3, name: 'Bob Johnson (Offline)', age: 45, diagnosis: 'Checkup' },
+        { 
+          id: 1, 
+          first_name: 'John', 
+          last_name: 'Doe', 
+          email: 'john.doe@example.com',
+          phone_number: '123-456-7890',
+          date_of_birth: '1993-01-01',
+          address_street: '123 Main St',
+          address_city: 'Anytown',
+          address_state: 'CA',
+          address_zip: '12345'
+        },
+        { 
+          id: 2, 
+          first_name: 'Jane', 
+          last_name: 'Smith', 
+          email: 'jane.smith@example.com',
+          phone_number: '123-456-7890',
+          date_of_birth: '1998-01-01',
+          address_street: '456 Oak Ave',
+          address_city: 'Somewhere',
+          address_state: 'NY',
+          address_zip: '67890'
+        },
+        { 
+          id: 3, 
+          first_name: 'Bob', 
+          last_name: 'Johnson', 
+          email: 'bob.johnson@example.com',
+          phone_number: '555-123-4567',
+          date_of_birth: '1978-01-01',
+          address_street: '789 Pine St',
+          address_city: 'Elsewhere',
+          address_state: 'TX',
+          address_zip: '54321'
+        },
       ];
     }
   },

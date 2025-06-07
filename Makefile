@@ -1,4 +1,4 @@
-.PHONY: build up down smoke-test e2e-test e2e-up e2e-down e2e-ui e2e-report
+.PHONY: build up down smoke-test e2e-test e2e-up e2e-down e2e-ui e2e-report seed-data
 
 build:
 	docker-compose build
@@ -36,4 +36,7 @@ e2e-report:
 
 # Full test suite
 test: smoke-test e2e-test
-	@echo "All tests completed!" 
+	@echo "All tests completed!"
+
+seed-data:
+	docker-compose exec backend python /app/create_test_patients.py

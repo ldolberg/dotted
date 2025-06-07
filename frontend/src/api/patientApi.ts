@@ -4,14 +4,28 @@
 const mockPatients = [
   {
     id: '1',
-    name: 'John Doe',
+    first_name: 'John Doe',
+    last_name: 'Doe',
     dateOfBirth: '1990-05-15',
+    email: 'john.doe@example.com',
+    phone_number: '123-456-7890',
+    address_street: '123 Main St',
+    address_city: 'Anytown',
+    address_state: 'CA',
+    address_zip: '12345',
     // Add other patient fields as needed
   },
   {
     id: '2',
-    name: 'Jane Smith',
+    first_name: 'Jane',
+    last_name: 'Smith',
     dateOfBirth: '1985-11-20',
+    email: 'jane.smith@example.com',
+    phone_number: '123-456-7890',
+    address_street: '123 Main St',
+    address_city: 'Anytown',
+    address_state: 'CA',
+    address_zip: '12345',
     // Add other patient fields as needed
   },
 ];

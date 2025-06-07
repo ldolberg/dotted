@@ -31,3 +31,23 @@ jobs:
 
     - name: Stop services
       run: docker compose down 
+
+  ## new job for e2e
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run e2e tests
+        run: docker compose run --rm playwright npm test
+
+  ## new job for e2e-ui
+  e2e-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run e2e tests
+        run: docker compose run --rm playwright npm run test:ui
